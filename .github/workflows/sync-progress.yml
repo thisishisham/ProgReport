@@ -1,1 +1,27 @@
+name: Sync progress.txt from data.json
 
+on:
+  push:
+    paths:
+      - data.json
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Extract progress and update progress.txt
+        run: |
+          PROGRESS=$(jq -r '.progress' data.json)
+          echo "$PROGRESS" > progress.txt
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add progress.txt
+          git commit -m "Sync progress.txt from data.json" || echo "No changes"
+          git push
