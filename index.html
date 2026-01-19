@@ -2,9 +2,43 @@
 <html>
 <head>
   <title>ProgReport</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <h2>ProgReport is Live 🚀</h2>
-  <p>If you can see this, GitHub Pages works.</p>
+
+<h2>Live Progress</h2>
+<canvas id="chart" width="600" height="300"></canvas>
+
+<script>
+const ctx = document.getElementById('chart');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'Progress (%)',
+      data: [],
+      borderWidth: 2
+    }]
+  },
+  options: {
+    scales: {
+      y: { min: 0, max: 100 }
+    }
+  }
+});
+
+async function updateChart() {
+  const res = await fetch('data.json?_=' + new Date().getTime());
+  const d = await res.json();
+
+  chart.data.labels.push(new Date().toLocaleTimeString());
+  chart.data.datasets[0].data.push(d.progress);
+  chart.update();
+}
+
+setInterval(updateChart, 3000);
+</script>
+
 </body>
 </html>
