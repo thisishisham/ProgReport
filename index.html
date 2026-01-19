@@ -29,7 +29,7 @@ const chart = new Chart(ctx, {
 });
 
 async function updateChart() {
-  const res = await fetch('data.json?_=' + new Date().getTime());
+  const res = await fetch('https://raw.githubusercontent.com/thisishisham/ProgReport/main/data.json?_=' + Date.now());
   const d = await res.json();
 
   chart.data.labels.push(new Date().toLocaleTimeString());
